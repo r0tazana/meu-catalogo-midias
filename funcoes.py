@@ -57,3 +57,28 @@ def adicionar_itens():
 
     print(f"\n '{titulo}' foi adicionado ao catálogo com sucesso!")
 
+#função que ficar responsavel por imprimir e deixar visivel ao usuario os dados que ele inseriu no sistema de forma organizada
+
+def listar_midas():
+
+    try:
+     with open('catalogo.csv', mode='r', encoding='utf-8') as arquivo:
+        leitor = csv.DictReader(arquivo)
+        #Variavel que criamos para servir como um  escaner as midias catalogadas no arquivo
+
+        midias = list(leitor)
+        #Conversão da variavel leitor a um array
+
+        if not midias:
+            print("\n====Nenhuma Mídia Cadastrada ainda!====")
+
+            return
+
+        
+        print("\n---CATALOGO DE MÍDIAS---")
+        for midia in midias:
+            print("------------------------------------------------------------------------------------------")
+            print(f"• Título: {midia['titulo']} | Categoria: {midia['tipo']} | Status: {midia['status']}")
+            print("------------------------------------------------------------------------------------------")
+    except FileNotFoundError:
+            print("\n Arquivo de catálogo não encontrado.\n Tente Cadatra uma Mídia Primeiro!!")
