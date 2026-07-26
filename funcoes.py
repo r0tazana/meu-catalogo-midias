@@ -82,3 +82,54 @@ def listar_midas():
             print("------------------------------------------------------------------------------------------")
     except FileNotFoundError:
             print("\n Arquivo de catálogo não encontrado.\n Tente Cadatra uma Mídia Primeiro!!")
+
+
+#função de busca pra capturar midas catalogadas no banco de dados csv por meio de nome ou categoria
+# Função de busca para capturar mídias catalogadas no banco de dados CSV por meio de nome ou categoria
+def buscar_midias():
+    try:
+        with open('catalogo.csv', mode='r', encoding='utf-8') as arquivo:
+            leitor = csv.DictReader(arquivo)
+            midias = list(leitor)
+
+            # Verificação de antigos cadastros
+            if not midias:
+                print("\n=== Nenhuma Mídia Cadastrada Para Usarmos a Opção de Busca! ===")
+                return
+
+            print("\n--- Busca de Mídias ---")
+            print("1 - Buscar Por Título da Obra")
+            print("2 - Buscar Por Categoria")
+            opcao = input("Escolha o Critério de Busca: ").strip()
+
+            # Validação de escolha inserida pelo usuário
+            if opcao not in ('1', '2'):
+                print("\nOpção Inválida! Escolha entre 1 ou 2.")
+                return
+
+            # Variável responsável por armazenar a obra a ser buscada no nosso banco de dados
+            termo = input("\nPesquisar Mídia: ").strip().lower()
+
+            # "Sacola" onde serão armazenados nossos itens que passem na verificação no loop
+            encontrados = []
+
+            # Busca e armazenamento de itens na lista 
+            for midia in midias:
+                if opcao == '1' and termo in midia['titulo'].lower():
+                    encontrados.append(midia)
+                elif opcao == '2' and termo in midia['tipo'].lower():
+                    encontrados.append(midia)
+
+            # Exibição de resultado
+            if encontrados:
+                print(f"\n==== {len(encontrados)} Mídia(s) Encontrada(s) ====")
+                print("==========================================================================================") 
+                for item in encontrados:
+                    print(f"• Obra: {item['titulo']} | Categoria: {item['tipo']} | Status: {item['status']}")     
+                print("==========================================================================================\n")
+
+            else:
+                print("\nNenhuma Mídia encontrada com esse Termo!")
+
+    except FileNotFoundError:
+        print("\nArquivo de Catálogo Não Encontrado. Cadastre uma Mídia Primeiro!")
