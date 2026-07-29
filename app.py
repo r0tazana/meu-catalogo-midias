@@ -1,4 +1,4 @@
-from funcoes import inicializar_csv, adicionar_itens, listar_midas, buscar_midias
+from funcoes import inicializar_csv, adicionar_itens, listar_midas, buscar_midias, atualizar_midia
 
 if __name__ == "__main__":
    
@@ -14,7 +14,9 @@ while True:
     print("1 - Cadastrar Nova Mídia")
     print("2 - Listar Todas as Mídias")
     print("3 - Buscar Mídia no Catalogo")
-    print("4 - Sair Do Sistema")
+    print("4 - Atualizar Coluna no Catalogo")
+    print("5 - Sair Do Sistema")
+    
 
     opcao = input("\nEscolha Uma Opição: ").strip()
 
@@ -27,9 +29,13 @@ while True:
     elif opcao == '3':
 #Busca dados por meio de Titulo e Tipo
         buscar_midias()
+#Atualizar algum dado da coluna de catalogo
     elif opcao == '4':
+        atualizar_midia()
+
+    elif opcao == '5':
         print("\n * Saindo do Sistema...! Até Logo!")
         break # encerra o loop
 
     else:
-        print("\nOpção Invalida! Digite um Numero de 1 a 4.")
+        print("\nOpção Invalida! Digite um Numero de 1 a 5.")

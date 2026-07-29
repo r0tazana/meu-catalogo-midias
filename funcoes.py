@@ -125,7 +125,7 @@ def buscar_midias():
                 print(f"\n==== {len(encontrados)} Mídia(s) Encontrada(s) ====")
                 print("==========================================================================================") 
                 for item in encontrados:
-                    print(f"• Obra: {item['titulo']} | Categoria: {item['tipo']} | Status: {item['status']}")     
+                    print(f"* Obra: {item['titulo']} | Categoria: {item['tipo']} | Status: {item['status']}")     
                 print("==========================================================================================\n")
 
             else:
@@ -133,3 +133,78 @@ def buscar_midias():
 
     except FileNotFoundError:
         print("\nArquivo de Catálogo Não Encontrado. Cadastre uma Mídia Primeiro!")
+
+#Função responsavel por sobescrever os dados ja existentes em nosso banco para correção de erros ou promoção de status, utilizando menu simples
+def atualizar_midia():
+    try:
+        with open('catalogo.csv', mode='r', encoding='utf-8') as arquivo:
+            leitor = csv.DictReader(arquivo)
+            midias = list(leitor)
+
+            if not midias:
+                print("\n ===Nenhuma Mídia Cadastrada Para Utilizarmos a Atualização!===")
+                return
+            
+        print("\n---Atualização de Obras---")
+        titulo_busca = input("\n===Informe o Nome da Obra que Deseja Realizar Alterações=== ").strip().lower()
+        encotrado = False
+
+        # Percorre a lista para procurar a mídia
+        for midia in midias:
+            if midia['titulo'].lower() == titulo_busca:
+                encotrado = True
+                print(f"\n===*Obra {midia['titulo']} | Categoria: {midia['tipo']} | Status Atual: {midia['status']} | Ano: {midia['ano']} | Nota: {midia['nota']} | URL: {midia['url_imagem']}===")
+
+                print('\n---Informe Qual Campo Deseja Atualizar---')
+                print("1 - titulo:")
+                print("2 - tipo:")
+                print("3 - genero:")
+                print("4 - ano:")
+                print("5 - status:")
+                print("6 - nota:")
+                print("7 - comentario:")
+                print("8 - url_imagem:")
+
+                opcao = input("\n===Campo Desejado=== ").strip()
+
+                if opcao == '1':
+                    midia['titulo'] = input("Digite um Novo Titulo: ").strip()
+                elif opcao == '2':
+                    midia['tipo'] = input("Digite uma Nova Categoria: ").strip()
+                elif opcao == '3':
+                    midia['genero'] = input("Digite um Novo Genero: ").strip()
+                elif opcao == '4':
+                    midia['ano'] = input("Digite um Novo Ano: ").strip()
+                elif opcao == '5':
+                    midia['status'] = input("Digite um Novo Status: ").strip()
+                elif opcao == '6':
+                    midia['nota'] = input("Digite uma Nova Nota: ").strip()
+                elif opcao == '7':
+                    midia['comentario'] = input("Digite um Novo Comentario: ").strip()
+                elif opcao == '8':
+                    midia['url_imagem'] = input("Insira uma Nova Imagem: ").strip()
+                else:
+                    print("\n Valor inserido Invalido. Por Favor Escolha uma Opiçao dentre as que estão no Menu!")
+                    return
+
+                print("\n ===Mídia Atualizada Com Sucesso na Memoria!===")
+                break # Para a busca pois já achou e alterou
+
+        # Verificação FORA do loop for
+        if not encotrado:
+            print(f"\n Nenhuma Mídia com o título '{titulo_busca}' foi encontrada!")
+            return
+
+        # Sobrescrevendo o arquivo CSV com os dados novos
+        with open('catalogo.csv', mode='w', newline='', encoding='utf-8') as arquivo:
+            colunas = ['id', 'titulo', 'tipo', 'genero', 'ano', 'status', 'nota', 'comentario', 'url_imagem']
+            escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+
+            escritor.writeheader()
+            escritor.writerows(midias)  
+
+    except FileNotFoundError:
+        print("\nArquivo de catálogo não encontrado!")
+                
+
+
