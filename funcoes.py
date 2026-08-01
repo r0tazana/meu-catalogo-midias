@@ -206,5 +206,50 @@ def atualizar_midia():
     except FileNotFoundError:
         print("\nArquivo de catálogo não encontrado!")
                 
+#função final com onjetivo de excluir completamente uma mídia do catalogo
+def remover_midia():
+    try:
+        with open('catalogo.csv', mode='r', encoding='utf-8') as arquivo:
+            leitor = csv.DictReader(arquivo)
+            midias = list(leitor) 
+
+            if not midias:
+                print("\n ===Nenhuma Mídia Cadastrada Para Removermos!=== ")
+                return
+
+        print("\n ===REMOÇÃO DE OBRA===")
+        opcao_remo = input("\n---Qual Obra Voce Deseja Remover do Catalogo ?--- ").strip().lower()
+        encontrado = False
+
+        for midia in midias:
+            if midia['titulo'].lower() == opcao_remo:
+                encontrado = True
+
+                # Camada de segurança para confirmação (UX)
+                confirmacao = input(f"\n===Certeza que deseja remover '{midia['titulo']}' do catálogo? (s/n)=== ").strip().lower()
+
+                if confirmacao == 's':
+                    midias.remove(midia)
+                    print(f"\n === {midia['titulo']} acaba de ser removido(a) de seu Catálogo!===")
+                else:
+                    print("\n ===Operação encerrada!===")
+                    return
+                break # Para o loop após encontrar e processar
+
+        # Verificação FORA do loop
+        if not encontrado:
+            print(f"\n Obra '{opcao_remo}' Não Foi Encontrada No Catálogo De Mídias.")
+            return
+
+        # Sobrescreve os dados no CSV sem a mídia removida
+        with open('catalogo.csv', mode='w', newline='', encoding='utf-8') as arquivo:
+            colunas = ['id', 'titulo', 'tipo', 'genero', 'ano', 'status', 'nota', 'comentario', 'url_imagem']
+            escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+
+            escritor.writeheader()  # Escreve o cabeçalho
+            escritor.writerows(midias)
+
+    except FileNotFoundError:
+        print("\nArquivo de catálogo não encontrado!")
 
 
